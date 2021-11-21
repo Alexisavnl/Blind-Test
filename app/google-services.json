@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "789841114297",
+    "project_id": "quizm-817fb",
+    "storage_bucket": "quizm-817fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789841114297:android:3bbb10d60601665823d768",
+        "android_client_info": {
+          "package_name": "com.example.quizmusic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "789841114297-m1dd8r2vvmcaqqpau8s8oi885lk86c19.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.quizmusic",
+            "certificate_hash": "071bd2d367fe4c68b68c3478e14247990cdaf7c0"
+          }
+        },
+        {
+          "client_id": "789841114297-qqanu09033cpm6nbe40qq8mcfg4ks92t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR6SBTwAxFTsIvV-BmxaY--E-vXuWgcx8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789841114297-qqanu09033cpm6nbe40qq8mcfg4ks92t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

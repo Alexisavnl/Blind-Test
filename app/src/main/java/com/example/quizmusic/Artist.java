@@ -8,13 +8,14 @@ import java.util.List;
 
 public class Artist implements Serializable{
 
-    private String id;
+    private int id;
     private String name;
     private String picture_small;
     private int nb_fan;
     private List<Artist> artists;
+    private boolean selected = false;
 
-    public Artist(String id, String name, String picture_small, int nb_fan) {
+    public Artist(int id, String name, String picture_small, int nb_fan) {
         this.id = id;
         this.name = name;
         this.picture_small = picture_small;
@@ -24,7 +25,7 @@ public class Artist implements Serializable{
         artists.add(this);
     }
 
-    public String getId(){
+    public int getId(){
         return id;
     }
 
@@ -44,6 +45,13 @@ public class Artist implements Serializable{
         return artists;
     }
 
+    public void isSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean getSelected(){
+        return selected;
+    }
     @Override
     public String toString() {
         return "Artist{" +

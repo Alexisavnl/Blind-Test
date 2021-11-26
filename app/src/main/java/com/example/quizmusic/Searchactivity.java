@@ -1,12 +1,18 @@
 package com.example.quizmusic;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,17 +45,22 @@ public class Searchactivity extends AppCompatActivity {
     private EditText editText;
     private static HttpURLConnection connection;
     private ListView listView;
+    private Button buttonGenerate;
     ArrayList<HashMap<String,String>> artistsList;
     private HashMap<String, String> artists;
+    private List<Artist> artistList;
+    private Artist selectedArtist = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        artistList = new ArrayList<>();
         artistsList = new ArrayList<>();
         editText = findViewById(R.id.editText);
         listView = findViewById(R.id.listView);
+        buttonGenerate = findViewById(R.id.button_generate);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -65,11 +76,24 @@ public class Searchactivity extends AppCompatActivity {
                 String s = editable.toString();
                 System.out.println(s);
                 if(s.isEmpty()){
-                    display(new ArrayList<>());
+                    displayList(new ArrayList<>());
                     return;
                 }
                 getListTrack(s);
 
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                buttonGenerate.setVisibility(view.VISIBLE);
+                if(selectedArtist!=null){
+                    selectedArtist.isSelected(false);
+                }
+                selectedArtist = (Artist) listView.getItemAtPosition(position);
+                selectedArtist.isSelected(true);
+                listView.invalidateViews();
             }
         });
     }
@@ -80,7 +104,7 @@ public class Searchactivity extends AppCompatActivity {
         final TextView textView = (TextView) findViewById(R.id.text);
         RequestQueue requestQueue;
         artistsList.clear();
-
+        artistList.clear();
         // Instantiate the cache
         Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
 
@@ -94,7 +118,7 @@ public class Searchactivity extends AppCompatActivity {
         requestQueue.start();
         RequestQueue queue = Volley.newRequestQueue(this);
         String url ="https://api.deezer.com/search/artist?q="+s;
-
+        //https://api.deezer.com/artist/27/top?limit=50
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -104,21 +128,24 @@ public class Searchactivity extends AppCompatActivity {
                         try{
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            String name, id, cover, nb_fan;
+                            String name;
+                            int id;
+                            String cover;
+                            int nb_fan;
                             for(int i=0; i<jsonArray.length();i++){
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                id = jsonObject1.getString("id");
+                                id = jsonObject1.getInt("id");
                                 name = jsonObject1.getString("name");
                                 cover = jsonObject1.getString("picture_small");
-                                nb_fan = jsonObject1.getString("nb_fan");
+                                nb_fan = jsonObject1.getInt("nb_fan");
 
                                 //System.out.println("id "+id+" name "+name);
-
+                                artistList.add(new Artist(id,name, cover, nb_fan));
                                 artists = new HashMap<>();
-                                artists.put("id",id);
+                                //artists.put("id",id);
                                 artists.put("name",name);
                                 artists.put("picture_small",cover);
-                                artists.put("nb_fan",nb_fan);
+                                //artists.put("nb_fan",nb_fan);
 
                                 artistsList.add(artists);
                             }
@@ -127,7 +154,7 @@ public class Searchactivity extends AppCompatActivity {
                                     System.out.println(key + " = " + map.get(key));
                                 }
                             }*/
-                            display(artistsList);
+                            displayList(artistList);
 
                         }catch (JSONException e){
                             e.printStackTrace();
@@ -144,9 +171,9 @@ public class Searchactivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-
-    private void display(ArrayList<HashMap<String,String>> artistsList){
-        HasMapAdapter adapter = new HasMapAdapter(artistsList);
+    private void displayList(List<Artist> artistsList){
+        ListAdapter adapter = new ListAdapter(this,R.layout.list_item, artistsList);
         listView.setAdapter(adapter);
     }
+
 }

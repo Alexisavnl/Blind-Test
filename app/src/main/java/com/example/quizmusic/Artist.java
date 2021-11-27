@@ -2,6 +2,8 @@ package com.example.quizmusic;
 
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,15 +12,15 @@ public class Artist implements Serializable{
 
     private int id;
     private String name;
-    private String picture_small;
+    private URL picture_small;
     private int nb_fan;
     private List<Artist> artists;
     private boolean selected = false;
 
-    public Artist(int id, String name, String picture_small, int nb_fan) {
+    public Artist(int id, String name, String picture_small, int nb_fan) throws MalformedURLException {
         this.id = id;
         this.name = name;
-        this.picture_small = picture_small;
+        this.picture_small = new URL(picture_small);
         this.nb_fan = nb_fan;
         artists = new ArrayList<>();
         System.out.println(id+name+picture_small+nb_fan);
@@ -33,7 +35,7 @@ public class Artist implements Serializable{
         return name;
     }
 
-    public String getPicture_small() {
+    public URL getURLPicture() {
         return picture_small;
     }
 

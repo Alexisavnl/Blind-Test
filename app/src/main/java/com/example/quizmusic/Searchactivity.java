@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,16 +26,15 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -46,9 +44,7 @@ public class Searchactivity extends AppCompatActivity {
     private static HttpURLConnection connection;
     private ListView listView;
     private Button buttonGenerate;
-    ArrayList<HashMap<String,String>> artistsList;
-    private HashMap<String, String> artists;
-    private List<Artist> artistList;
+    private List<Artist> artistsList;
     private Artist selectedArtist = null;
 
     @Override
@@ -56,7 +52,6 @@ public class Searchactivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        artistList = new ArrayList<>();
         artistsList = new ArrayList<>();
         editText = findViewById(R.id.editText);
         listView = findViewById(R.id.listView);
@@ -74,8 +69,10 @@ public class Searchactivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 String s = editable.toString();
-                System.out.println(s);
+                //System.out.println(s);
                 if(s.isEmpty()){
+                    selectedArtist=null;
+                    buttonGenerate.setVisibility(listView.getRootView().INVISIBLE);
                     displayList(new ArrayList<>());
                     return;
                 }
@@ -93,18 +90,56 @@ public class Searchactivity extends AppCompatActivity {
                 }
                 selectedArtist = (Artist) listView.getItemAtPosition(position);
                 selectedArtist.isSelected(true);
-                listView.invalidateViews();
+                listView.invalidateViews(); //Refresh list
+            }
+        });
+
+        buttonGenerate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Searchactivity.this);
+                builder.setCancelable(true);
+                builder.setTitle("Sélectionner la difficulté :");
+                String[] difficulty = {"facile", "moyen", "difficile", "turboDifficile", "annuler"};
+                builder.setItems(difficulty, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0: {
+                                Intent intent = new Intent(getApplicationContext(), Play.class);
+                                startActivity(intent);
+                            }
+
+                            case 1: {
+                                Intent intent = new Intent(getApplicationContext(), Play.class);
+                                startActivity(intent);
+                            }
+
+                            case 2: {
+                                Intent intent = new Intent(getApplicationContext(), Play.class);
+                                startActivity(intent);
+                            }
+                            case 3: {
+                                Intent intent = new Intent(getApplicationContext(), Play.class);
+                                startActivity(intent);
+                            }
+                            case 4: {
+
+                            }
+                        }
+                    }
+                });
+
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
     }
 
     private void getListTrack(String s) {
-        //la
 
-        final TextView textView = (TextView) findViewById(R.id.text);
         RequestQueue requestQueue;
         artistsList.clear();
-        artistList.clear();
         // Instantiate the cache
         Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
 
@@ -140,23 +175,11 @@ public class Searchactivity extends AppCompatActivity {
                                 nb_fan = jsonObject1.getInt("nb_fan");
 
                                 //System.out.println("id "+id+" name "+name);
-                                artistList.add(new Artist(id,name, cover, nb_fan));
-                                artists = new HashMap<>();
-                                //artists.put("id",id);
-                                artists.put("name",name);
-                                artists.put("picture_small",cover);
-                                //artists.put("nb_fan",nb_fan);
-
-                                artistsList.add(artists);
+                                artistsList.add(new Artist(id,name, cover, nb_fan));
                             }
-                            /*for (HashMap<String,String> map : artistsList){
-                                for (String key : map.keySet()) {
-                                    System.out.println(key + " = " + map.get(key));
-                                }
-                            }*/
-                            displayList(artistList);
+                            displayList(artistsList);
 
-                        }catch (JSONException e){
+                        }catch (JSONException | MalformedURLException e){
                             e.printStackTrace();
                         }
                     }
@@ -177,3 +200,4 @@ public class Searchactivity extends AppCompatActivity {
     }
 
 }
+

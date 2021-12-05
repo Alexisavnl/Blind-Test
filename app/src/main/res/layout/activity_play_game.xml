@@ -69,6 +69,7 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardA"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         app:cardCornerRadius="@dimen/_10sdp"
@@ -87,6 +88,7 @@
 
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardB"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         app:cardCornerRadius="@dimen/_10sdp"
@@ -105,6 +107,7 @@
 
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardC"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         app:cardCornerRadius="@dimen/_10sdp"
@@ -123,6 +126,7 @@
 
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardD"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
         app:cardCornerRadius="@dimen/_10sdp"

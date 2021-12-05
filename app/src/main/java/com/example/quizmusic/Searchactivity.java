@@ -103,7 +103,7 @@ public class Searchactivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0: {
-                                Intent intent = new Intent(Searchactivity.this, EasyModeActivity.class);
+                                Intent intent = new Intent(Searchactivity.this, PlayGameActivity.class);
                                 intent.putExtra("Artist", selectedArtist);
                                 //intent.putExtra("ArtistsList", artistsList);
                                 startActivity(intent);

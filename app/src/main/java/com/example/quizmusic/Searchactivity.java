@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -34,7 +33,6 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -44,14 +42,15 @@ public class Searchactivity extends AppCompatActivity {
     private static HttpURLConnection connection;
     private ListView listView;
     private Button buttonGenerate;
-    private List<Artist> artistsList;
-    private Artist selectedArtist = null;
+    private ArrayList<Artist> artistsList;
+    public Artist selectedArtist = null;
+    final static public String ARTIST_NAME_KEY = "ARTISTNAME";
+    final static public String ARTIST_ID_KEY = "ARTISTID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
         artistsList = new ArrayList<>();
         editText = findViewById(R.id.editText);
         listView = findViewById(R.id.listView);
@@ -69,15 +68,14 @@ public class Searchactivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 String s = editable.toString();
-                //System.out.println(s);
                 if(s.isEmpty()){
                     selectedArtist=null;
                     buttonGenerate.setVisibility(listView.getRootView().INVISIBLE);
                     displayList(new ArrayList<>());
                     return;
                 }
-                getListTrack(s);
 
+                displayList(getListTrack(s));
             }
         });
 
@@ -105,22 +103,21 @@ public class Searchactivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0: {
-                                Intent intent = new Intent(getApplicationContext(), Play.class);
+                                Intent intent = new Intent(Searchactivity.this, EasyModeActivity.class);
+                                intent.putExtra("Artist", selectedArtist);
+                                //intent.putExtra("ArtistsList", artistsList);
                                 startActivity(intent);
                             }
 
                             case 1: {
-                                Intent intent = new Intent(getApplicationContext(), Play.class);
-                                startActivity(intent);
+
                             }
 
                             case 2: {
-                                Intent intent = new Intent(getApplicationContext(), Play.class);
-                                startActivity(intent);
+
                             }
                             case 3: {
-                                Intent intent = new Intent(getApplicationContext(), Play.class);
-                                startActivity(intent);
+
                             }
                             case 4: {
 
@@ -136,30 +133,29 @@ public class Searchactivity extends AppCompatActivity {
         });
     }
 
-    private void getListTrack(String s) {
+
+    private List<Artist> getListTrack(String s) {
+
 
         RequestQueue requestQueue;
         artistsList.clear();
-        // Instantiate the cache
-        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
 
-        // Set up the network to use HttpURLConnection as the HTTP client.
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+
         Network network = new BasicNetwork(new HurlStack());
 
-        // Instantiate the RequestQueue with the cache and network.
         requestQueue = new RequestQueue(cache, network);
 
-        // Start the queue
         requestQueue.start();
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://api.deezer.com/search/artist?q="+s;
+        String url = "https://api.deezer.com/search/artist?q="+s;
+        
         //https://api.deezer.com/artist/27/top?limit=50
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
                         try{
                             JSONObject jsonObject = new JSONObject(response);
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
@@ -173,9 +169,10 @@ public class Searchactivity extends AppCompatActivity {
                                 name = jsonObject1.getString("name");
                                 cover = jsonObject1.getString("picture_small");
                                 nb_fan = jsonObject1.getInt("nb_fan");
-
-                                //System.out.println("id "+id+" name "+name);
                                 artistsList.add(new Artist(id,name, cover, nb_fan));
+                                System.out.println("debut");
+                                System.out.println(artistsList.get(i).getName());
+                                System.out.println("fin");
                             }
                             displayList(artistsList);
 
@@ -192,12 +189,18 @@ public class Searchactivity extends AppCompatActivity {
 
 
         queue.add(stringRequest);
+        return artistsList;
     }
+
+
 
     private void displayList(List<Artist> artistsList){
         ListAdapter adapter = new ListAdapter(this,R.layout.list_item, artistsList);
         listView.setAdapter(adapter);
     }
 
+    public Artist getSelectedArtist() {
+        return selectedArtist;
+    }
 }
 

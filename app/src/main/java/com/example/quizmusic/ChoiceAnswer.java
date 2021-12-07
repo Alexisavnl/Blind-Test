@@ -2,13 +2,13 @@ package com.example.quizmusic;
 
 public class ChoiceAnswer {
 
-    String cA;
-    String cB;
-    String cC;
-    String cD;
-    String correctAnswer;
+    Track cA;
+    Track cB;
+    Track cC;
+    Track cD;
+    Track correctAnswer;
 
-    public ChoiceAnswer(String cA, String cB, String cC, String cD, String correctAnswer) {
+    public ChoiceAnswer(Track cA, Track cB, Track cC, Track cD, Track correctAnswer) {
         this.cA = cA;
         this.cB = cB;
         this.cC = cC;
@@ -16,43 +16,54 @@ public class ChoiceAnswer {
         this.correctAnswer = correctAnswer;
     }
 
-    public String getcA() {
+    public Track getcA() {
         return cA;
     }
 
-    public void setcA(String cA) {
+    public void setcA(Track cA) {
         this.cA = cA;
     }
 
-    public String getcB() {
+    public Track getcB() {
         return cB;
     }
 
-    public void setcB(String cB) {
+    public void setcB(Track cB) {
         this.cB = cB;
     }
 
-    public String getcC() {
+    public Track getcC() {
         return cC;
     }
 
-    public void setcC(String cC) {
+    public void setcC(Track cC) {
         this.cC = cC;
     }
 
-    public String getcD() {
+    public Track getcD() {
         return cD;
     }
 
-    public void setcD(String cD) {
+    public void setcD(Track cD) {
         this.cD = cD;
     }
 
-    public String getCorrectAnswer() {
+    public Track getCorrectAnswer() {
         return correctAnswer;
     }
 
-    public void setCorrectAnswer(String correctAnswer) {
+    public void setCorrectAnswer(Track correctAnswer) {
         this.correctAnswer = correctAnswer;
+    }
+
+    @Override
+    public String toString() {
+        return "ChoiceAnswer{" +
+                "cA='" + cA.getTitle() + '\'' +
+                ", cB='" + cB.getTitle() + '\'' +
+                ", cC='" + cC.getTitle() + '\'' +
+                ", cD='" + cD.getTitle() + '\'' +
+                ", correctAnswer='" + correctAnswer.getTitle() + '\'' +
+                '}';
     }
 }

@@ -13,11 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
+            android:name=".WonActivity"
+            android:exported="false" />
+        <activity
             android:name=".PlayGameActivity"
             android:exported="false" />
         <activity
             android:name=".SplashScreen"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".EasyModeActivity"
             android:exported="false" />

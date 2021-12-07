@@ -163,17 +163,17 @@ public class Searchactivity extends AppCompatActivity {
                             int id;
                             String cover;
                             int nb_fan;
-                            for(int i=0; i<jsonArray.length();i++){
+                            for(int i=0; i<30 && i <jsonArray.length();i++){
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 id = jsonObject1.getInt("id");
                                 name = jsonObject1.getString("name");
                                 cover = jsonObject1.getString("picture_small");
                                 nb_fan = jsonObject1.getInt("nb_fan");
                                 artistsList.add(new Artist(id,name, cover, nb_fan));
-                                System.out.println("debut");
-                                System.out.println(artistsList.get(i).getName());
-                                System.out.println("fin");
                             }
+                            System.out.println("ooo");
+                            System.out.println("taille de la liste "+artistsList.size());
+                            System.out.println("pppee");
                             displayList(artistsList);
 
                         }catch (JSONException | MalformedURLException e){

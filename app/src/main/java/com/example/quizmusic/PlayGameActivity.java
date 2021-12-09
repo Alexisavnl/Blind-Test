@@ -5,12 +5,15 @@ import androidx.cardview.widget.CardView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
+import android.os.StrictMode;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,9 +37,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PlayGameActivity extends AppCompatActivity {
 
@@ -48,14 +52,15 @@ public class PlayGameActivity extends AppCompatActivity {
     private Artist selectedArtist;
     private ArrayList<Track> selectedTracks;
     private ArrayList<Track> listOfAllTracks;
-    private TextView optionA, optionB, optionC, optionD;
+    private TextView optionA, optionB, optionC, optionD, point;
     private CardView cardA, cardB, cardC, cardD;
-    private ImageView bPlay, bPause;
+    private ImageView bPlay, bPause, cover;
     MediaPlayer mediaPlayer;
     private LinearLayout nextbtn;
     private int index=0;
     private int correctCount=0;
-    private int wrongCount=0;
+    private int totalTime=0;
+    private Score score;
 
 
     @Override
@@ -74,6 +79,7 @@ public class PlayGameActivity extends AppCompatActivity {
         optionB=findViewById(R.id.card_optionB);
         optionC=findViewById(R.id.card_optionC);
         optionD=findViewById(R.id.card_optionD);
+        point =findViewById(R.id.score);
 
         cardA=findViewById(R.id.cardA);
         cardB=findViewById(R.id.cardB);
@@ -83,12 +89,12 @@ public class PlayGameActivity extends AppCompatActivity {
         nextbtn=findViewById(R.id.nextbtn);
         nextbtn.setClickable(false);
 
+        cover=findViewById(R.id.cover);
         bPlay=findViewById(R.id.btnplay);
         bPause=findViewById(R.id.btnpause);
         mediaPlayer = new MediaPlayer();
-        play_audio();
-        //getListTrack();
-        //startTimer();
+        getListTrack();
+        startTimer();
 
 
     }
@@ -125,6 +131,8 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     private void displayAnswer() {
+
+        point.setText(correctCount + " Pts");
         optionA.setText(choiceAnswer.getcA().getTitle());
         optionB.setText(choiceAnswer.getcB().getTitle());
         optionC.setText(choiceAnswer.getcC().getTitle());
@@ -164,6 +172,7 @@ public class PlayGameActivity extends AppCompatActivity {
             System.out.println("bonne reponse pour "+i+" est "+choiceAnswers.get(i).getCorrectAnswer().getTitle());
         }
         choiceAnswer= choiceAnswers.get(index);
+        play_audio(choiceAnswer.getCorrectAnswer().getPreview());
         displayAnswer();
 
     }
@@ -192,12 +201,16 @@ public class PlayGameActivity extends AppCompatActivity {
 
                             String title;
                             String preview;
+                            String cover_small;
                             for(int i=0; i<jsonArray.length();i++){
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 title = jsonObject1.getString("title");
                                 preview = jsonObject1.getString("preview");
+                                JSONObject jsonObject2 = jsonObject1.getJSONObject("album");
+                                cover_small = jsonObject2.getString("cover");
+                                System.out.println(jsonObject2);
                                 if(title != null && preview != null){
-                                    listOfAllTracks.add(new Track(title,preview));
+                                    listOfAllTracks.add(new Track(title,preview,cover_small));
                                 }
 
                             }
@@ -229,16 +242,31 @@ public class PlayGameActivity extends AppCompatActivity {
 
     private void correct(CardView card){
         card.setBackgroundColor(getResources().getColor(R.color.green));
+        try {
+            downloadImage(choiceAnswer.getCorrectAnswer(), cover);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         nextbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                correctCount++;
-                index++;
-                choiceAnswer= choiceAnswers.get(index);
-                displayAnswer();
-                resetColor();
-                enableBtn();
-                startTimer();
+                if(index<choiceAnswers.size()-1) {
+                    countDownTimer.cancel();
+                    totalTime+= 30 - timerValue;
+                    correctCount++;
+                    index++;
+                    mediaPlayer.pause();
+                    choiceAnswer = choiceAnswers.get(index);
+                    displayAnswer();
+                    resetColor();
+                    enableBtn();
+                    startTimer();
+                    cover.setImageResource(0);
+                    play_audio(choiceAnswer.getCorrectAnswer().getPreview());
+                } else {
+                    GameWon();
+                }
+
             }
         });
     }
@@ -246,16 +274,26 @@ public class PlayGameActivity extends AppCompatActivity {
     private void wrong(CardView card){
 
         card.setBackgroundColor(getResources().getColor(R.color.red));
+        try {
+            downloadImage(choiceAnswer.getCorrectAnswer(), cover);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         nextbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wrongCount++;
                 if(index<choiceAnswers.size()-1){
+                    countDownTimer.cancel();
+                    totalTime+= 30 - timerValue;
                     index++;
+                    mediaPlayer.pause();
                     choiceAnswer= choiceAnswers.get(index);
                     displayAnswer();
                     enableBtn();
                     resetColor();
+                    startTimer();
+                    cover.setImageResource(0);
+                    play_audio(choiceAnswer.getCorrectAnswer().getPreview());
                 }else {
                     GameWon();
                 }
@@ -267,6 +305,9 @@ public class PlayGameActivity extends AppCompatActivity {
     private void GameWon() {
 
         Intent intent = new Intent(PlayGameActivity.this, WonActivity.class);
+        score = new Score("alexis", correctCount, totalTime);
+        intent.putExtra("score", score);
+        intent.putExtra("collectionName", selectedArtist.getName());
         startActivity(intent);
     }
 
@@ -278,6 +319,7 @@ public class PlayGameActivity extends AppCompatActivity {
 
     }
     private void enableBtn(){
+        nextbtn.setClickable(false);
         cardA.setClickable(true);
         cardB.setClickable(true);
         cardC.setClickable(true);
@@ -348,14 +390,16 @@ public class PlayGameActivity extends AppCompatActivity {
         }
     }
 
-    private void play_audio(){
+    private void play_audio(String URLPreview){
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         Thread th=new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    mediaPlayer.setDataSource("https://cdns-preview-d.dzcdn.net/stream/c-deda7fa9316d9e9e880d2c6207e92260-8.mp3");
+                    mediaPlayer.reset();
+                    System.out.println("url passer en parametre "+URLPreview);
+                    mediaPlayer.setDataSource(URLPreview);
                     mediaPlayer.prepareAsync();
                     mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
@@ -373,4 +417,30 @@ public class PlayGameActivity extends AppCompatActivity {
         th.start();
     }
 
+    public void clickPause(View view) {
+        bPause.setVisibility(View.INVISIBLE);
+        bPlay.setVisibility(View.VISIBLE);
+        mediaPlayer.pause();
+    }
+
+    public void clickPlay(View view) {
+        bPause.setVisibility(View.VISIBLE);
+        bPlay.setVisibility(View.INVISIBLE);
+        mediaPlayer.start();
+    }
+
+    private void downloadImage(Track track, ImageView imageView) throws MalformedURLException {
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+        try {
+            Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(track.getCover()).getContent());
+            imageView.setImageBitmap(bitmap);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

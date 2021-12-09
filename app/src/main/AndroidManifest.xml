@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"/>
+        <activity
             android:name=".WonActivity"
             android:exported="false" />
         <activity
@@ -20,13 +26,7 @@
             android:exported="false" />
         <activity
             android:name=".SplashScreen"
-            android:exported="false" />
-        <activity
-            android:name=".EasyModeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Searchactivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Searchactivity"
             android:exported="false" />
     </application>
 

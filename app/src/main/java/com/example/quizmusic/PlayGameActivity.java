@@ -242,6 +242,7 @@ public class PlayGameActivity extends AppCompatActivity {
 
     private void correct(CardView card){
         card.setBackgroundColor(getResources().getColor(R.color.green));
+        countDownTimer.cancel();
         try {
             downloadImage(choiceAnswer.getCorrectAnswer(), cover);
         } catch (MalformedURLException e) {
@@ -251,7 +252,7 @@ public class PlayGameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(index<choiceAnswers.size()-1) {
-                    countDownTimer.cancel();
+
                     totalTime+= 30 - timerValue;
                     correctCount++;
                     index++;
@@ -272,8 +273,8 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     private void wrong(CardView card){
-
         card.setBackgroundColor(getResources().getColor(R.color.red));
+        countDownTimer.cancel();
         try {
             downloadImage(choiceAnswer.getCorrectAnswer(), cover);
         } catch (MalformedURLException e) {
@@ -283,7 +284,7 @@ public class PlayGameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(index<choiceAnswers.size()-1){
-                    countDownTimer.cancel();
+
                     totalTime+= 30 - timerValue;
                     index++;
                     mediaPlayer.pause();

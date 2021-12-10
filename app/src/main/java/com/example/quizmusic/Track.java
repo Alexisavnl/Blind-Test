@@ -17,23 +17,12 @@ public class Track {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getPreview() {
         return preview;
-    }
-
-    public void setPreview(String preview) {
-        this.preview = preview;
     }
 
     public String getCover() {
         return cover;
     }
 
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
 }

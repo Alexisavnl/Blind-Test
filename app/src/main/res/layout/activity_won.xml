@@ -60,17 +60,6 @@
             android:paddingHorizontal="50dp"
             android:paddingVertical="20dp"
             android:text="Nouvelle partie" />
-        <Button
-            android:id="@+id/btnDisconnect"
-            android:layout_width="230dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/btnNewParty"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/ic_btn"
-            android:paddingHorizontal="50dp"
-            android:paddingVertical="20dp"
-            android:text="Déconnexion" />
 
 
     </RelativeLayout>

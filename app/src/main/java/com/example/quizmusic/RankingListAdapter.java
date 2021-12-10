@@ -13,7 +13,7 @@ import java.util.List;
 
 public class RankingListAdapter extends ArrayAdapter<Score> {
 
-    private int resourceLayout, iteration=0;
+    private int resourceLayout;
     private Context mContext;
     private ArrayList<Score> scores;
 
@@ -28,7 +28,6 @@ public class RankingListAdapter extends ArrayAdapter<Score> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        iteration++;
 
         View v = convertView;
 
@@ -39,9 +38,9 @@ public class RankingListAdapter extends ArrayAdapter<Score> {
             v = vi.inflate(resourceLayout, null);
         }
 
-        Score s = getItem(position);
+        Score score = getItem(position);
 
-        if (s != null) {
+        if (score != null) {
             TextView pseudo = (TextView) v.findViewById(R.id.artistName);
             TextView registeredScore = (TextView) v.findViewById(R.id.followers);
             ImageView cover =  v.findViewById(R.id.cover);
@@ -51,18 +50,17 @@ public class RankingListAdapter extends ArrayAdapter<Score> {
             rankingPosition.setVisibility(View.VISIBLE);
             buttonSelected.setVisibility(View.GONE);
             if (pseudo != null) {
-                pseudo.setText(s.getPseudo());
+                pseudo.setText(score.getPseudo());
             }
 
             if (registeredScore != null) {
-                registeredScore.setText("Nb bonne réponse : "+s.getCorrectCount()+ " en "+s.getDuration()+" secondes");
+                String s = "Nb bonne réponse : "+score.getCorrectCount()+ " en "+score.getDuration()+" secondes";
+                registeredScore.setText(s);
             }
 
-            if (rankingPosition != null) {
-                String i = Integer.toString(position+1);
-                System.out.println("le i "+i);
-                rankingPosition.setText(i);
-            }
+
+            String i = Integer.toString(position+1);
+            rankingPosition.setText(i);
 
         }
 

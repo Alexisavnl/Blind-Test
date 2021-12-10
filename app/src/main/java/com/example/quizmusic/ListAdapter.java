@@ -11,12 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.quizmusic.Artist;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -56,7 +53,8 @@ public class ListAdapter extends ArrayAdapter<Artist> {
             }
 
             if (nb_followers != null) {
-                nb_followers.setText(p.getNb_fan() + " followers");
+                String s = p.getNb_fan() + " followers";
+                nb_followers.setText(s);
             }
 
             if (cover != null) {
@@ -93,8 +91,6 @@ public class ListAdapter extends ArrayAdapter<Artist> {
         try {
             Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(artist.getURLPicture()).getContent());
             imageView.setImageBitmap(bitmap);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

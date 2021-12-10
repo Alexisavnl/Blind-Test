@@ -20,40 +20,20 @@ public class ChoiceAnswer {
         return cA;
     }
 
-    public void setcA(Track cA) {
-        this.cA = cA;
-    }
-
     public Track getcB() {
         return cB;
-    }
-
-    public void setcB(Track cB) {
-        this.cB = cB;
     }
 
     public Track getcC() {
         return cC;
     }
 
-    public void setcC(Track cC) {
-        this.cC = cC;
-    }
-
     public Track getcD() {
         return cD;
     }
 
-    public void setcD(Track cD) {
-        this.cD = cD;
-    }
-
     public Track getCorrectAnswer() {
         return correctAnswer;
-    }
-
-    public void setCorrectAnswer(Track correctAnswer) {
-        this.correctAnswer = correctAnswer;
     }
 
     @Override

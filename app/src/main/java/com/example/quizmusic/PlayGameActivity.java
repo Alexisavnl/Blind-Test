@@ -106,7 +106,7 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     private void startTimer(){
-        if(countDownTimer!=null && gameMode!="flash") { countDownTimer.cancel(); }
+        if(countDownTimer!=null) { countDownTimer.cancel(); }
         countDownTimer=new CountDownTimer((timerValue* 1000L),1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -122,7 +122,7 @@ public class PlayGameActivity extends AppCompatActivity {
                 dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
                 dialog.setContentView(R.layout.time_out_dialog);
                 dialog.findViewById(R.id.btn_timeout).setOnClickListener(v -> {
-                    if(gameMode=="classic"){
+                    if(gameMode.equals("classic")){
                         prepareNextQuestion();
                         dialog.dismiss();
                     } else{
@@ -168,7 +168,7 @@ public class PlayGameActivity extends AppCompatActivity {
 
     private void selectTracks(){
         selectedTracks = new ArrayList<>();
-        int iteration=0;
+        int iteration;
         if (gameMode.equals("classic")){
             iteration=10;
         } else{
@@ -183,7 +183,7 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     private void generateQuestion(){
-        int iteration=0;
+        int iteration;
         System.out.println("generate "+gameMode);
         if(gameMode.equals("classic")){
             iteration=10;

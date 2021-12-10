@@ -3,7 +3,6 @@ package com.example.quizmusic;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 
 
@@ -45,18 +44,6 @@ public class Artist implements Serializable{
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPicture_small(String picture_small) {
-        this.picture_small = picture_small;
-    }
-
-    public void setNb_fan(int nb_fan) {
-        this.nb_fan = nb_fan;
     }
 
     public void isSelected(boolean selected) {

@@ -1,19 +1,13 @@
 package com.example.quizmusic;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,22 +40,20 @@ public class RankingActivity extends AppCompatActivity {
         }
 
         System.out.println("non de du docu "+documentName);
+        System.out.println();
         db.collection(gameMode).whereEqualTo("artist", documentName)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId()+ " => " + document.getData());
-                        scores.add(document.toObject(Score.class));
-                        System.out.println(document.toString());
-                    } displayList(scores);
-                    System.out.println("taille de la liste "+scores.size());
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d(TAG, document.getId()+ " => " + document.getData());
+                            scores.add(document.toObject(Score.class));
+                            System.out.println(document.toString());
+                        } displayList(scores);
+                        System.out.println("taille de la liste "+scores.size());
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
     }
 
     private void displayList(List<Score> scoresList){

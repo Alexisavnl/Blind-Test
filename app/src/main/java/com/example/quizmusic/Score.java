@@ -24,16 +24,8 @@ public class Score implements Serializable, Comparable<Score> {
         return pseudo;
     }
 
-    public void setPseudo(String pseudo) {
-        this.pseudo = pseudo;
-    }
-
     public int getCorrectCount() {
         return correctCount;
-    }
-
-    public void setCorrectCount(int correctCount) {
-        this.correctCount = correctCount;
     }
 
     public int getDuration() {

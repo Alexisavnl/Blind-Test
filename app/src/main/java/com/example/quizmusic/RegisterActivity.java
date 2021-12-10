@@ -20,6 +20,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     TextInputEditText etRegEmail;
     TextInputEditText etRegPassword;
+
+
+
     TextView tvLoginHere;
     Button btnRegister;
 
@@ -40,7 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(view ->{
             createUser();
         });
-
         tvLoginHere.setOnClickListener(view ->{
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
@@ -56,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         }else if (TextUtils.isEmpty(password)){
             etRegPassword.setError("Password cannot be empty");
             etRegPassword.requestFocus();
-        }else{
+        } else{
             mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {

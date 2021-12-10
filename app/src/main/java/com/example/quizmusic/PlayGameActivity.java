@@ -3,7 +3,9 @@ package com.example.quizmusic;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,8 +15,10 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.os.StrictMode;
+import android.text.Editable;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -304,12 +308,34 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     private void GameWon() {
-
+        mediaPlayer.pause();
         Intent intent = new Intent(PlayGameActivity.this, WonActivity.class);
-        score = new Score("alexis", correctCount, totalTime);
-        intent.putExtra("score", score);
-        intent.putExtra("collectionName", selectedArtist.getName());
-        startActivity(intent);
+        final String[] pseudo = new String[1];
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final EditText input = new EditText(PlayGameActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alert.setTitle("Tape ton pseudo");
+        alert.setCancelable(false);
+        alert.setView(input);
+
+        alert.setPositiveButton("envoyer", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //What ever you want to do with the value
+                Editable YouEditTextValue = input.getText();
+                //OR
+                pseudo[0] = input.getText().toString();
+                score = new Score(pseudo[0], correctCount, totalTime);
+                intent.putExtra("score", score);
+                intent.putExtra("collectionName", selectedArtist.getName());
+                startActivity(intent);
+            }
+        });
+
+        alert.show();
+
     }
 
     private void resetColor(){

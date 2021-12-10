@@ -2,7 +2,7 @@ package com.example.quizmusic;
 
 import java.io.Serializable;
 
-public class Score implements Serializable {
+public class Score implements Serializable, Comparable<Score> {
 
     private String pseudo;
     private int correctCount;
@@ -12,6 +12,10 @@ public class Score implements Serializable {
         this.pseudo = pseudo;
         this.correctCount = correctCount;
         this.duration = duration;
+    }
+
+    public Score(){
+
     }
 
     public String getPseudo() {
@@ -36,5 +40,15 @@ public class Score implements Serializable {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    @Override
+    public int compareTo(Score o) {
+        if((o.correctCount - this.correctCount) == 0){
+            return (this.duration - o.duration);
+        }else {
+            return (o.correctCount - this.correctCount);
+        }
+
     }
 }

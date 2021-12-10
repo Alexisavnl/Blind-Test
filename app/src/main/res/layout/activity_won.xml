@@ -1,41 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".WonActivity">
 
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/summary"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_70sdp"
-        android:background="@color/background_color">
-        <ImageView
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_60sdp"
-            android:background="@drawable/trophy"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/_10sdp"
-            android:layout_alignParentLeft="true"/>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="tu as marqué"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_40sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_50sdp"
-            android:layout_marginEnd="@dimen/_50sdp"
-            android:text="RECORD PERSONNEL!!"
-            android:gravity="center"
-            android:textSize="30dp"
-            android:textStyle="bold"/>
 
-        <ImageView
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_60sdp"
-            android:background="@drawable/trophy"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:layout_alignParentRight="true"/>
+    <Button
+        android:id="@+id/btnRank"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/ic_btn"
+        android:paddingHorizontal="50dp"
+        android:paddingVertical="20dp"
+        android:text="Classement"
+        android:layout_marginBottom="@dimen/_50sdp"
+        app:layout_constraintBottom_toTopOf="@+id/rl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="@dimen/_30sdp">
+
+
+
+        <Button
+            android:id="@+id/btnNewParty"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_btn"
+            android:paddingHorizontal="50dp"
+            android:paddingVertical="20dp"
+            android:text="Nouvelle partie" />
+        <Button
+            android:id="@+id/btnDisconnect"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnNewParty"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/ic_btn"
+            android:paddingHorizontal="50dp"
+            android:paddingVertical="20dp"
+            android:text="Déconnexion" />
+
 
     </RelativeLayout>
-</RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

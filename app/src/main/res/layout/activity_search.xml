@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="50dp"
             android:paddingVertical="20dp"
-            android:text="Généré la session"
+            android:text="Générer la session"
             android:layout_marginBottom="@dimen/_5sdp"
             android:visibility="gone"/>
     </LinearLayout>

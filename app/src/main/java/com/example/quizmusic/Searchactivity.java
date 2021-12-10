@@ -97,7 +97,7 @@ public class Searchactivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Searchactivity.this);
                 builder.setCancelable(true);
                 builder.setTitle("Sélectionner la difficulté :");
-                String[] difficulty = {"facile", "moyen", "difficile", "turboDifficile", "annuler"};
+                String[] difficulty = {"facile", "moyen"};
                 builder.setItems(difficulty, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -113,15 +113,6 @@ public class Searchactivity extends AppCompatActivity {
 
                             }
 
-                            case 2: {
-
-                            }
-                            case 3: {
-
-                            }
-                            case 4: {
-
-                            }
                         }
                     }
                 });

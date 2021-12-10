@@ -7,11 +7,13 @@ public class Score implements Serializable, Comparable<Score> {
     private String pseudo;
     private int correctCount;
     private int duration;
+    private String artist;
 
-    public Score(String pseudo, int correctCount, int duration) {
+    public Score(String pseudo, int correctCount, int duration, String artist) {
         this.pseudo = pseudo;
         this.correctCount = correctCount;
         this.duration = duration;
+        this.artist = artist;
     }
 
     public Score(){
@@ -40,6 +42,10 @@ public class Score implements Serializable, Comparable<Score> {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public String getArtist() {
+        return artist;
     }
 
     @Override

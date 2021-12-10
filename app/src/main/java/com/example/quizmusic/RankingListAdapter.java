@@ -1,9 +1,6 @@
 package com.example.quizmusic;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class RankingListAdapter extends ArrayAdapter<Score> {
@@ -59,6 +48,7 @@ public class RankingListAdapter extends ArrayAdapter<Score> {
             cover.setVisibility(View.GONE);
             TextView rankingPosition = v.findViewById(R.id.rankingNumber);
             ImageView buttonSelected = v.findViewById(R.id.button_check);
+            rankingPosition.setVisibility(View.VISIBLE);
             buttonSelected.setVisibility(View.GONE);
             if (pseudo != null) {
                 pseudo.setText(s.getPseudo());
@@ -69,7 +59,8 @@ public class RankingListAdapter extends ArrayAdapter<Score> {
             }
 
             if (rankingPosition != null) {
-                String i = Integer.toString(iteration);
+                String i = Integer.toString(position+1);
+                System.out.println("le i "+i);
                 rankingPosition.setText(i);
             }
 

@@ -1,23 +1,15 @@
 package com.example.quizmusic;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,11 +19,13 @@ public class WonActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private Score score;
-    private String collectionName;
+    private String documentName;
     private TextView summary;
     private Button signOut, newParty, rank;
     private HashMap<String, Map<String, Object>> hashMap;
     private ArrayList<Score> scores;
+    private String gameMode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,14 +41,24 @@ public class WonActivity extends AppCompatActivity {
         scores= new ArrayList<>();
 
         if (getIntent().hasExtra("collectionName")){
-            collectionName = (String) getIntent().getSerializableExtra("collectionName");
+            documentName = (String) getIntent().getSerializableExtra("collectionName");
         }
         if (getIntent().hasExtra("score")){
             score = (Score) getIntent().getSerializableExtra("score");
         }
+        if (getIntent().hasExtra("Mode")){
+            gameMode = (String) getIntent().getStringExtra("Mode");
+        }
+        if(gameMode.equals("classic")){
+            db.collection("classic").document(documentName).set(score);
+            summary.setText("Bravo tu as marqué "+score.getCorrectCount()+ " point(s) en seulement "+score.getDuration()+" secondes");
 
-        summary.setText("Bravo tu as marqué "+score.getCorrectCount()+ " en seulement "+score.getDuration()+" secondes");
-        addDataToFirestore(collectionName, score);
+        } else{
+            score.setDuration(30);
+            db.collection("flash").document(documentName).set(score);
+            summary.setText("Bravo tu as reconnu "+score.getCorrectCount()+ " musiques en 60 secondes");
+
+        }
 
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,15 +80,10 @@ public class WonActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(WonActivity.this, RankingActivity.class);
-                intent.putExtra("collectionName", collectionName);
+                intent.putExtra("collectionName", documentName);
+                intent.putExtra("Mode",gameMode);
                 startActivity(intent);
             }
         });
-
     }
-
-    private void addDataToFirestore(String collectionName, Score score){
-        db.collection(collectionName).document(score.getPseudo()).set(score);
-    }
-
 }

@@ -3,13 +3,10 @@ package com.example.quizmusic;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,8 +15,6 @@ import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
@@ -30,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +33,10 @@ import java.util.List;
 public class Searchactivity extends AppCompatActivity {
 
     private EditText editText;
-    private static HttpURLConnection connection;
     private ListView listView;
     private Button buttonGenerate;
     private ArrayList<Artist> artistsList;
     public Artist selectedArtist = null;
-    final static public String ARTIST_NAME_KEY = "ARTISTNAME";
-    final static public String ARTIST_ID_KEY = "ARTISTID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,51 +70,43 @@ public class Searchactivity extends AppCompatActivity {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                buttonGenerate.setVisibility(view.VISIBLE);
-                if(selectedArtist!=null){
-                    selectedArtist.isSelected(false);
-                }
-                selectedArtist = (Artist) listView.getItemAtPosition(position);
-                selectedArtist.isSelected(true);
-                listView.invalidateViews(); //Refresh list
+        listView.setOnItemClickListener((adapterView, view, position, id) -> {
+            buttonGenerate.setVisibility(view.VISIBLE);
+            if(selectedArtist!=null){
+                selectedArtist.isSelected(false);
             }
+            selectedArtist = (Artist) listView.getItemAtPosition(position);
+            selectedArtist.isSelected(true);
+            listView.invalidateViews();
         });
 
-        buttonGenerate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(Searchactivity.this);
-                builder.setCancelable(true);
-                builder.setTitle("Sélectionner la difficulté :");
-                String[] difficulty = {"facile", "moyen"};
-                builder.setItems(difficulty, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0: {
-                                Intent intent = new Intent(Searchactivity.this, PlayGameActivity.class);
-                                intent.putExtra("Artist", selectedArtist);
-                                //intent.putExtra("ArtistsList", artistsList);
-                                startActivity(intent);
-                            }
-
-                            case 1: {
-
-                            }
-
-                        }
+        buttonGenerate.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(Searchactivity.this);
+            builder.setCancelable(true);
+            builder.setTitle("Sélectionner la difficulté :");
+            String[] difficulty = {"facile", "moyen"};
+            Intent intent = new Intent(Searchactivity.this, PlayGameActivity.class);
+            intent.putExtra("Artist", selectedArtist);
+            builder.setItems(difficulty, (dialog, which) -> {
+                switch (which) {
+                    case 0: {
+                        intent.putExtra("Mode", "classic");
+                        startActivity(intent);
+                        break;
                     }
-                });
 
+                    case 1: {
+                        intent.putExtra("Mode", "flash");
+                        startActivity(intent);
+                        break;
+                    }
+                }
+            });
 
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         });
     }
-
 
     private List<Artist> getListTrack(String s) {
 
@@ -144,54 +127,40 @@ public class Searchactivity extends AppCompatActivity {
         //https://api.deezer.com/artist/27/top?limit=50
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONObject jsonObject = new JSONObject(response);
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            String name;
-                            int id;
-                            String cover;
-                            int nb_fan;
-                            for(int i=0; i<30 && i <jsonArray.length();i++){
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                id = jsonObject1.getInt("id");
-                                name = jsonObject1.getString("name");
-                                cover = jsonObject1.getString("picture_small");
-                                nb_fan = jsonObject1.getInt("nb_fan");
-                                artistsList.add(new Artist(id,name, cover, nb_fan));
-                            }
-                            System.out.println("ooo");
-                            System.out.println("taille de la liste "+artistsList.size());
-                            System.out.println("pppee");
-                            displayList(artistsList);
-
-                        }catch (JSONException | MalformedURLException e){
-                            e.printStackTrace();
+                response -> {
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                        String name;
+                        int id;
+                        String cover;
+                        int nb_fan;
+                        for(int i=0; i<30 && i <jsonArray.length();i++){
+                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                            id = jsonObject1.getInt("id");
+                            name = jsonObject1.getString("name");
+                            cover = jsonObject1.getString("picture_small");
+                            nb_fan = jsonObject1.getInt("nb_fan");
+                            artistsList.add(new Artist(id,name, cover, nb_fan));
                         }
+                        System.out.println("ooo");
+                        System.out.println("taille de la liste "+artistsList.size());
+                        System.out.println("pppee");
+                        displayList(artistsList);
+
+                    }catch (JSONException | MalformedURLException e){
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println("That didn't work!");
-            }
-        });
+                }, error -> System.out.println("That didn't work!"));
 
 
         queue.add(stringRequest);
         return artistsList;
     }
 
-
-
     private void displayList(List<Artist> artistsList){
         ListAdapter adapter = new ListAdapter(this,R.layout.list_item, artistsList);
         listView.setAdapter(adapter);
-    }
-
-    public Artist getSelectedArtist() {
-        return selectedArtist;
     }
 }
 
